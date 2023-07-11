@@ -33,7 +33,7 @@
             android:id="@+id/imgbtn_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_forward"
+            android:src="@drawable/ic_arrow_circle_right"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_margin="8dp"
             app:layout_constraintEnd_toEndOf="parent"

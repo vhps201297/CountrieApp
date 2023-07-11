@@ -3,4 +3,7 @@
     <string name="str_detail_countrie_cd">Detalle de ciudad</string>
     <string name="str_search_btn">Buscar</string>
     <string name="str_name_countrie_hint">Nombre de ciudad</string>
+    <string name="str_name_country_label">Nombre del país</string>
+    <string name="str_amount_states_label">Número de estados</string>
+    <string name="str_capital_label">Capital</string>
 </resources>
