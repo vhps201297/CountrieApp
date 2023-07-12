@@ -6,46 +6,66 @@
     android:layout_height="match_parent"
     tools:context=".country.views.DetailCountryActivity">
 
+    <Button
+        android:id="@+id/btn_edit_country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:contentDescription="@string/str_edit_país_cd"
+        android:text="@string/str_edit_label"
+        android:backgroundTint="@color/green_900"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        android:orientation="vertical"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:background="@color/green_200"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/tv_name_country"
-            android:textSize="24sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
             tools:text="Francia" />
+
         <TextView
             android:id="@+id/tv_name_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/str_name_country_label"
-            />
+            android:text="@string/str_name_country_label" />
+
         <TextView
             android:id="@+id/tv_amount_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:textSize="24sp"
+            android:textStyle="bold"
             tools:text="10" />
+
         <TextView
             android:id="@+id/tv_amount_state_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/str_amount_states_label" />
+
         <TextView
             android:id="@+id/tv_capital"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:textSize="24sp"
+            android:textStyle="bold"
             tools:text="París" />
+
         <TextView
             android:id="@+id/tv_capital_label"
             android:layout_width="wrap_content"
@@ -64,11 +84,22 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_states"
-        app:layout_constraintTop_toBottomOf="@+id/guideline2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_state"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline2"
+        tools:listitem="@layout/item_state" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/str_add_new_state_cd"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

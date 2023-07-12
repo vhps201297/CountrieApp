@@ -1,8 +1,11 @@
 package com.example.countriesapp
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.countriesapp.common.DatabaseTmp
 import com.example.countriesapp.country.adapter.CountryAdapter
 import com.example.countriesapp.country.adapter.EventListener
@@ -10,6 +13,7 @@ import com.example.countriesapp.country.model.Country
 import com.example.countriesapp.country.views.DetailCountryActivity
 import com.example.countriesapp.databinding.ActivityMainBinding
 import com.example.countriesapp.state.model.State
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
 
 class MainActivity : AppCompatActivity(), EventListener {
@@ -20,8 +24,33 @@ class MainActivity : AppCompatActivity(), EventListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        binding.fabAddCountry.setOnClickListener { launchDialogAddCountry() }
         setupCountryAdapter()
+
+        val swipeHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT){
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder): Boolean = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                MaterialAlertDialogBuilder(this@MainActivity)
+                    .setTitle("Eliminar")
+                    .setMessage("Se eliminará el país de forma permanente")
+                    .setPositiveButton("Aceptar") { dialog, position ->
+                        mAdapterCountry.removeElement(viewHolder.adapterPosition)
+                    }
+                    .setNegativeButton("Cancelar") { dialog, i ->
+                        mAdapterCountry.notifyDataSetChanged()
+                    }
+                    .show()
+            }
+
+        })
+
+        swipeHelper.attachToRecyclerView(binding.content.rvCountries)
+    }
+
+    private fun launchDialogAddCountry() {
+
     }
 
     private fun setupCountryAdapter() {
@@ -41,12 +70,16 @@ class MainActivity : AppCompatActivity(), EventListener {
         if (DatabaseTmp.countries.isEmpty()){
             DatabaseTmp.countries.addAll(listOf(country1,country2))
         }
+        if(DatabaseTmp.states.isEmpty()){
+            DatabaseTmp.states.addAll(listOf(state,state2,state3))
+        }
         return DatabaseTmp.countries
     }
 
     override fun onClickListener(country: Country) {
         val intent = Intent(this, DetailCountryActivity::class.java)
-        intent.putExtra("country",country as Serializable)
+
+        intent.putExtra("country",country)
         startActivity(intent)
     }
 }

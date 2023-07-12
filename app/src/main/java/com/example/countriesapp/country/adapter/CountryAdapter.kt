@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.countriesapp.country.model.Country
 import com.example.countriesapp.databinding.ItemCountrieBinding
 
-class CountryAdapter(val countries: MutableList<Country>, val listener: EventListener):
+class CountryAdapter( val countries: MutableList<Country>, val listener: EventListener):
     RecyclerView.Adapter<CountryAdapter.CountryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryViewHolder {
@@ -20,6 +20,11 @@ class CountryAdapter(val countries: MutableList<Country>, val listener: EventLis
 
     override fun onBindViewHolder(holder: CountryViewHolder, position: Int) {
         holder.bindData(countries[position])
+    }
+
+    fun removeElement(id: Int) {
+        countries.removeAt(id)
+        notifyItemRemoved(id)
     }
 
     inner class CountryViewHolder(val binding: ItemCountrieBinding): ViewHolder(binding.root) {

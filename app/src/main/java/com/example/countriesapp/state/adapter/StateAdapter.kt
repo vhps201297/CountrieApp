@@ -18,7 +18,12 @@ class StateAdapter(val states: MutableList<State>): RecyclerView.Adapter<StateAd
     override fun getItemCount(): Int = states.size
 
     override fun onBindViewHolder(holder: StateViewHolder, position: Int) {
+        holder.bindData(states[position])
+    }
 
+    fun removeElement(adapterPosition: Int) {
+        states.removeAt(adapterPosition)
+        notifyItemRemoved(adapterPosition)
     }
 
     inner class StateViewHolder(val binding: ItemStateBinding): ViewHolder(binding.root) {

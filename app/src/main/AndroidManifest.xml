@@ -12,13 +12,13 @@
         android:theme="@style/Theme.CountriesApp"
         tools:targetApi="31">
         <activity
-            android:name=".DetailCountryActivity"
+            android:name=".country.views.DetailCountryActivity"
             android:exported="false" />
         <activity
             android:name=".state.StateActivity"
             android:exported="false" />
         <activity
-            android:name=".country.views.CountriesActivity"
+            android:name=".country.views.AddCountryActivity"
             android:exported="true"></activity>
         <activity
             android:name=".MainActivity"

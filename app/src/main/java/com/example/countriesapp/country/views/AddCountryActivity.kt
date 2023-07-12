@@ -11,22 +11,17 @@ import com.example.countriesapp.databinding.ActivityCountrieBinding
 import com.example.countriesapp.state.StateActivity
 import com.example.countriesapp.state.model.State
 
-class CountriesActivity : AppCompatActivity(),EventListener {
+class AddCountryActivity : AppCompatActivity(),EventListener {
     private lateinit var binding: ActivityCountrieBinding
     private lateinit var mAdapterCountry: CountryAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCountrieBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupCountryAdapter()
     }
 
     private fun setupCountryAdapter() {
         mAdapterCountry = CountryAdapter(getListCountries(), this)
-        binding.rvCountries.apply {
-            setHasFixedSize(true)
-            adapter = mAdapterCountry
-        }
     }
 
     private fun getListCountries(): MutableList<Country> {
