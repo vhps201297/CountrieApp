@@ -6,4 +6,5 @@
     <string name="str_name_country_label">Nombre del país</string>
     <string name="str_amount_states_label">Número de estados</string>
     <string name="str_capital_label">Capital</string>
+    <string name="str_add_country_cd">Agregar pa[is</string>
 </resources>
