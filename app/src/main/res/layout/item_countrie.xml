@@ -8,20 +8,22 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="90dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
+            android:src="@drawable/ic_flag"
             android:id="@+id/img_countrie"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/teal_200" />
 
         <TextView
             android:id="@+id/tv_name_countrie"

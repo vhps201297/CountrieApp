@@ -28,8 +28,8 @@ class AddCountryActivity : AppCompatActivity(),EventListener {
         val state = State(1, "Veracruz",1)
         val state2 = State(2, "CDMX",1)
         val state3 = State(2, "Paris",2)
-        val country1 = Country(1, "México", state2,12)
-        val country2 = Country(2, "Francia", state3,12)
+        val country1 = Country(1, "México", state2)
+        val country2 = Country(2, "Francia", state3)
         if (DatabaseTmp.countries.isEmpty()){
             DatabaseTmp.countries.addAll(listOf(country1,country2))
         }

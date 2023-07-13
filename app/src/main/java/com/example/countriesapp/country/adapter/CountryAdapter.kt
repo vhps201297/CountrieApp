@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.countriesapp.country.model.Country
 import com.example.countriesapp.databinding.ItemCountrieBinding
 
-class CountryAdapter( val countries: MutableList<Country>, val listener: EventListener):
+class CountryAdapter(var countries: MutableList<Country>, val listener: EventListener):
     RecyclerView.Adapter<CountryAdapter.CountryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryViewHolder {

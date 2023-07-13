@@ -11,4 +11,5 @@
     <string name="str_name_state">Nombre del estado</string>
     <string name="str_edit_país_cd">Editar país\n</string>
     <string name="str_edit_label">Editar</string>
+    <string name="str_nombre_del_pais_label">Nombre del país</string>
 </resources>

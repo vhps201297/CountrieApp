@@ -4,9 +4,13 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.countriesapp.common.DatabaseTmp
+import com.example.countriesapp.common.RequestRetrofit
+import com.example.countriesapp.common.TextWatcherEditText
 import com.example.countriesapp.country.adapter.CountryAdapter
 import com.example.countriesapp.country.adapter.EventListener
 import com.example.countriesapp.country.model.Country
@@ -14,12 +18,17 @@ import com.example.countriesapp.country.views.DetailCountryActivity
 import com.example.countriesapp.databinding.ActivityMainBinding
 import com.example.countriesapp.state.model.State
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.io.Serializable
 
 class MainActivity : AppCompatActivity(), EventListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mAdapterCountry: CountryAdapter
+    private var tilDialog: TextInputLayout? = null
+    private var edtxtDialog: TextInputEditText? = null
+    private var dialog: View? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -36,7 +45,10 @@ class MainActivity : AppCompatActivity(), EventListener {
                     .setTitle("Eliminar")
                     .setMessage("Se eliminará el país de forma permanente")
                     .setPositiveButton("Aceptar") { dialog, position ->
-                        mAdapterCountry.removeElement(viewHolder.adapterPosition)
+                        RequestRetrofit.deleteCountry(mAdapterCountry.countries[viewHolder.adapterPosition].id){country, msg ->
+                            mAdapterCountry.removeElement(viewHolder.adapterPosition)
+                        }
+
                     }
                     .setNegativeButton("Cancelar") { dialog, i ->
                         mAdapterCountry.notifyDataSetChanged()
@@ -50,30 +62,66 @@ class MainActivity : AppCompatActivity(), EventListener {
     }
 
     private fun launchDialogAddCountry() {
+        dialog = layoutInflater.inflate(R.layout.item_dialog_add_country,null)
+        edtxtDialog = dialog?.findViewById<TextInputEditText>(R.id.edt_name_state)
+        tilDialog = dialog?.findViewById<TextInputLayout>(R.id.til_name_state)
+        edtxtDialog?.addTextChangedListener(TextWatcherEditText(tilDialog!!))
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Agregar País")
+            .setPositiveButton("Guardar") { p0, p1 ->
+                if (edtxtDialog?.text.toString().isEmpty()) {
+                    println("edt vacío")
+                    tilDialog?.error = "Este campo no puede estar vacío"
 
+                } else {
+                    val cuountry = Country(mAdapterCountry.countries.size+10,
+                        edtxtDialog?.text.toString(),null
+                    )
+                    //country?.numStates = country?.numStates!!.plus(1)
+                    //DatabaseTmp.states.add(state)
+                    RequestRetrofit.addCountry(edtxtDialog?.text.toString()){ country, msg ->
+                        mAdapterCountry.countries.add(cuountry)
+                        mAdapterCountry.notifyDataSetChanged()
+                    }
+
+
+                }
+            }
+            .setView(dialog)
+            .show()
     }
 
     private fun setupCountryAdapter() {
-        mAdapterCountry = CountryAdapter(getListCountries(), this)
+        mAdapterCountry = CountryAdapter(mutableListOf(), this)
         binding.content.rvCountries.apply {
             setHasFixedSize(true)
             adapter = mAdapterCountry
         }
+        getListCountries()
     }
 
-    private fun getListCountries(): MutableList<Country> {
-        val state = State(1, "Veracruz",1)
-        val state2 = State(2, "CDMX",1)
-        val state3 = State(2, "Paris",2)
-        val country1 = Country(1, "México", state2,12)
-        val country2 = Country(2, "Francia", state3,12)
-        if (DatabaseTmp.countries.isEmpty()){
-            DatabaseTmp.countries.addAll(listOf(country1,country2))
+    private fun getListCountries(){
+        RequestRetrofit.getCountries { countries, messageError ->
+            if (countries != null) {
+                mAdapterCountry.countries = countries as MutableList<Country>
+                mAdapterCountry.notifyDataSetChanged()
+            } else {
+                println(messageError)
+                Toast.makeText(this@MainActivity, "Error: $messageError", Toast.LENGTH_SHORT).show()
+            }
         }
-        if(DatabaseTmp.states.isEmpty()){
-            DatabaseTmp.states.addAll(listOf(state,state2,state3))
+
+        RequestRetrofit.getAllStates{ states, messageError ->
+            if (states != null) {
+                DatabaseTmp.states.clear()
+                DatabaseTmp.states.addAll(states)
+            } else {
+                println(messageError)
+                Toast.makeText(this@MainActivity, "Error: $messageError", Toast.LENGTH_SHORT).show()
+            }
         }
-        return DatabaseTmp.countries
+
+
     }
 
     override fun onClickListener(country: Country) {

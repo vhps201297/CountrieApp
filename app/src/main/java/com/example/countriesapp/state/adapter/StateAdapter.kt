@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.countriesapp.databinding.ItemStateBinding
 import com.example.countriesapp.state.model.State
 
-class StateAdapter(val states: MutableList<State>): RecyclerView.Adapter<StateAdapter.StateViewHolder>() {
+class StateAdapter(var states: MutableList<State>): RecyclerView.Adapter<StateAdapter.StateViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StateViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

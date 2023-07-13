@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.countriesapp.R
 import com.example.countriesapp.common.DatabaseTmp
+import com.example.countriesapp.common.RequestRetrofit
 import com.example.countriesapp.common.TextWatcherEditText
 import com.example.countriesapp.country.model.Country
 import com.example.countriesapp.databinding.ActivityDetailCountryBinding
@@ -33,10 +34,16 @@ class DetailCountryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         country = intent.extras!!.getSerializable("country") as Country
-        setDataCountry()
+
         binding.fabAddState.setOnClickListener { launchDialogAddState() }
         setupRecycler()
         setupSwipe()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setDataCountry()
     }
 
     private fun setDataCountry() {
@@ -56,8 +63,13 @@ class DetailCountryActivity : AppCompatActivity() {
                     .setMessage("Se eliminará el estado de forma permanente")
                     .setPositiveButton("Aceptar") { dialog, position ->
                         //country?.numStates = country?.numStates!!.minus(1)
-                        mAdapter.removeElement(viewHolder.adapterPosition)
-                        setDataCountry()
+                        mAdapter.states[viewHolder.adapterPosition].id?.let {
+                            RequestRetrofit.deleteState(it){ states, msg ->
+                                mAdapter.removeElement(viewHolder.adapterPosition)
+                                setDataCountry()
+                            }
+                        }
+
                     }
                     .setNegativeButton("Cancelar") { dialog, i ->
                         mAdapter.notifyDataSetChanged()
@@ -84,15 +96,18 @@ class DetailCountryActivity : AppCompatActivity() {
 
                 } else {
                     val state = State(
-                        DatabaseTmp.states.size + 1,
-                        edtxtDialog?.text.toString(),
-                        country!!.id
+                        name = edtxtDialog?.text.toString(),
+                        country = country!!.id
                     )
                     //country?.numStates = country?.numStates!!.plus(1)
-                    DatabaseTmp.states.add(state)
-                    mAdapter.states.add(state)
-                    mAdapter.notifyDataSetChanged()
-                    setDataCountry()
+                    //DatabaseTmp.states.add(state)
+                    RequestRetrofit.addState(state){ newState, msg ->
+                        DatabaseTmp.states.add(state)
+                        mAdapter.states.add(state)
+                        mAdapter.notifyDataSetChanged()
+                        setDataCountry()
+                    }
+
 
                 }
             }
@@ -102,14 +117,22 @@ class DetailCountryActivity : AppCompatActivity() {
     }
 
     private fun setupRecycler() {
-        mAdapter = StateAdapter(getStatesForId(country?.id))
+        mAdapter = StateAdapter(DatabaseTmp.getStatesForCountryId(country!!.id))
         binding.rvStates.apply {
             setHasFixedSize(true)
             adapter = mAdapter
         }
+        //getStatesForId(country?.id)
     }
 
-    private fun getStatesForId(id: Int?): MutableList<State> {
-        return DatabaseTmp.getStatesForCountryId(id!!)
+    private fun getStatesForId(id: Int?)  {
+
+        RequestRetrofit.getStatesByCountryId(id!!){ states, msg ->
+            mAdapter.states = states as MutableList<State>
+            mAdapter.notifyDataSetChanged()
+        }
+
+
+        //return DatabaseTmp.getStatesForCountryId(id!!)
     }
 }
